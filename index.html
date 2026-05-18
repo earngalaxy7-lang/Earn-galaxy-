@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Free Earn</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2235;
+  --accent-gold: #f5c518;
+  --accent-cyan: #00d4ff;
+  --accent-green: #00ff88;
+  --accent-purple: #a855f7;
+  --accent-pink: #ff3b8b;
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --border-color: #2d3748;
+  --glow-gold: 0 0 20px rgba(245,197,24,0.4);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: radial-gradient(ellipse at 20% 0%, rgba(168,85,247,0.08) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 100%, rgba(0,212,255,0.06) 0%, transparent 60%);
+}
+.page { display:none; padding-bottom: 80px; min-height: 100vh; }
+.page.active { display:block; }
+
+/* TOP BAR */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  background: rgba(10,14,26,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(245,197,24,0.2);
+  padding: 12px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.topbar-profile {
+  width:42px; height:42px; border-radius:50%;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:18px;
+  box-shadow: 0 0 15px rgba(168,85,247,0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+.topbar-profile:hover { transform:scale(1.1); box-shadow: 0 0 25px rgba(168,85,247,0.8); }
+.topbar-balance {
+  font-family:'Orbitron', sans-serif; font-weight:700; font-size:15px;
+  background: linear-gradient(90deg, var(--accent-gold), #ff9500);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  text-shadow: none; filter: drop-shadow(0 0 8px rgba(245,197,24,0.6));
+  letter-spacing:1px;
+}
+.topbar-wallet { font-size:22px; cursor:pointer; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background: rgba(10,14,26,0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(245,197,24,0.2);
+  display:flex;
+  height:70px;
+}
+.nav-btn {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; cursor:pointer; gap:4px;
+  transition: all 0.3s; border:none; background:transparent; color:var(--text-secondary);
+  font-family:'Exo 2',sans-serif; font-size:11px; font-weight:600;
+  padding:8px 4px; position:relative;
+}
+.nav-btn .nav-icon { font-size:22px; transition: all 0.3s; }
+.nav-btn.active { color: var(--accent-gold); }
+.nav-btn.active .nav-icon { filter: drop-shadow(0 0 6px var(--accent-gold)); }
+.nav-btn.active::before {
+  content:''; position:absolute; top:0; left:10%; right:10%; height:2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+.nav-btn:hover { color: var(--accent-gold); }
+
+/* SECTION CARDS */
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 16px;
+  position:relative; overflow:hidden;
+}
+.section-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(245,197,24,0.4), transparent);
+}
+.section-title {
+  font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700;
+  color:var(--accent-gold); letter-spacing:2px; text-transform:uppercase;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+
+/* ADSTERRA BANNERS */
+.ad-banner-1 {
+  background: linear-gradient(135deg, #1a2235, #0f1929);
+  border: 1px dashed rgba(0,212,255,0.3);
+  border-radius:12px; margin:12px 16px; padding:12px;
+  text-align:center; color:var(--text-secondary); font-size:12px;
+  min-height:90px; display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.ad-banner-2 {
+  background: linear-gradient(135deg, #1a2235, #0f1929);
+  border: 1px dashed rgba(168,85,247,0.3);
+  border-radius:12px; margin:12px 16px; padding:12px;
+  text-align:center; color:var(--text-secondary); font-size:12px;
+  min-height:160px; display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+
+/* SPIN WHEEL */
+.wheel-container {
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+  padding:8px 0;
+}
+.wheel-wrapper {
+  position:relative; width:260px; height:260px;
+}
+.wheel-pointer {
+  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+  width:0; height:0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 28px solid var(--accent-gold);
+  filter: drop-shadow(0 0 8px var(--accent-gold));
+  z-index:10;
+}
+#spinCanvas, #autoSpinCanvas {
+  border-radius:50%;
+  box-shadow: 0 0 30px rgba(245,197,24,0.3), 0 0 60px rgba(245,197,24,0.1);
+  border: 4px solid rgba(245,197,24,0.5);
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-gold), #ff9500);
+  color: #000; font-family:'Orbitron',sans-serif; font-weight:700;
+  border:none; border-radius:12px; padding:14px 32px;
+  cursor:pointer; font-size:14px; letter-spacing:2px;
+  box-shadow: var(--glow-gold); transition: all 0.3s;
+  text-transform:uppercase; min-width:140px;
+}
+.btn-primary:hover { transform:translateY(-2px) scale(1.03); box-shadow: 0 0 30px rgba(245,197,24,0.7); }
+.btn-primary:active { transform:scale(0.97); }
+.btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+.btn-green {
+  background: linear-gradient(135deg, var(--accent-green), #00cc70);
+  color:#000; font-family:'Orbitron',sans-serif; font-weight:700;
+  border:none; border-radius:12px; padding:12px 28px;
+  cursor:pointer; font-size:13px; letter-spacing:2px;
+  box-shadow: var(--glow-green); transition:all 0.3s;
+  text-transform:uppercase;
+}
+.btn-green:hover { transform:translateY(-2px); box-shadow: 0 0 30px rgba(0,255,136,0.7); }
+.btn-green:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+.btn-cyan {
+  background: linear-gradient(135deg, var(--accent-cyan), #0080ff);
+  color:#000; font-family:'Orbitron',sans-serif; font-weight:700;
+  border:none; border-radius:12px; padding:12px 28px;
+  cursor:pointer; font-size:13px; letter-spacing:2px;
+  box-shadow: var(--glow-cyan); transition:all 0.3s;
+  text-transform:uppercase;
+}
+.btn-cyan:hover { transform:translateY(-2px); box-shadow: 0 0 30px rgba(0,212,255,0.7); }
+
+.btn-red {
+  background: linear-gradient(135deg, #ff3b3b, #cc0000);
+  color:#fff; font-family:'Orbitron',sans-serif; font-weight:700;
+  border:none; border-radius:12px; padding:12px 28px;
+  cursor:pointer; font-size:13px; letter-spacing:2px;
+  box-shadow: 0 0 20px rgba(255,59,59,0.4); transition:all 0.3s;
+  text-transform:uppercase;
+}
+.btn-red:hover { transform:translateY(-2px); }
+
+.btn-outline {
+  background:transparent;
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+  font-family:'Exo 2',sans-serif; font-weight:600;
+  border-radius:10px; padding:10px 20px;
+  cursor:pointer; font-size:13px; transition:all 0.3s;
+}
+.btn-outline:hover { background:rgba(0,212,255,0.1); }
+
+/* DAILY REWARDS */
+.daily-grid {
+  display:grid; grid-template-columns: repeat(7,1fr); gap:6px;
+}
+.day-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-color);
+  border-radius:10px; padding:8px 4px; text-align:center;
+  transition:all 0.3s; position:relative;
+}
+.day-card.today {
+  border-color: var(--accent-gold);
+  background: rgba(245,197,24,0.12);
+  box-shadow: 0 0 15px rgba(245,197,24,0.3);
+}
+.day-card.claimed {
+  border-color: var(--accent-green);
+  background: rgba(0,255,136,0.08);
+  opacity:0.7;
+}
+.day-card.locked { opacity:0.4; }
+.day-label { font-size:9px; color:var(--text-secondary); font-weight:600; text-transform:uppercase; }
+.day-icon { font-size:18px; margin:4px 0; }
+.day-coins { font-family:'Orbitron',sans-serif; font-size:9px; color:var(--accent-gold); font-weight:700; }
+
+/* TASK ITEMS */
+.task-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-color);
+  border-radius:14px; padding:14px;
+  margin-bottom:10px; display:flex;
+  align-items:center; gap:12px;
+  transition:all 0.3s; position:relative; overflow:hidden;
+}
+.task-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+  border-radius:3px 0 0 3px;
+}
+.task-item.auto::before {
+  background: linear-gradient(180deg, var(--accent-gold), var(--accent-pink));
+}
+.task-icon { font-size:26px; min-width:40px; text-align:center; }
+.task-info { flex:1; }
+.task-name { font-weight:600; font-size:14px; color:var(--text-primary); }
+.task-reward { font-family:'Orbitron',sans-serif; font-size:12px; color:var(--accent-gold); margin-top:2px; }
+.task-badge { font-size:10px; background:rgba(0,212,255,0.15); color:var(--accent-cyan); border-radius:6px; padding:2px 6px; margin-top:4px; display:inline-block; }
+
+/* REFERRAL */
+.ref-link-box {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius:12px; padding:14px;
+  font-family:'Orbitron',sans-serif; font-size:11px;
+  color:var(--accent-cyan); word-break:break-all; letter-spacing:1px;
+  margin-bottom:12px;
+}
+.ref-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-color);
+  border-radius:12px; padding:14px; margin-bottom:8px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.ref-stat-label { color:var(--text-secondary); font-size:13px; }
+.ref-stat-value { font-family:'Orbitron',sans-serif; font-size:16px; color:var(--accent-green); font-weight:700; }
+
+/* WALLET */
+.wallet-balance-box {
+  background: linear-gradient(135deg, rgba(245,197,24,0.15), rgba(255,149,0,0.08));
+  border: 1px solid rgba(245,197,24,0.4);
+  border-radius:16px; padding:24px; text-align:center;
+  margin-bottom:16px;
+}
+.wallet-coins { font-family:'Orbitron',sans-serif; font-size:32px; font-weight:900;
+  background: linear-gradient(135deg, var(--accent-gold), #ff9500);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.withdraw-option {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-color);
+  border-radius:14px; padding:16px; margin-bottom:10px;
+}
+.withdraw-option input {
+  width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border-color);
+  border-radius:10px; padding:10px 14px; color:var(--text-primary);
+  font-family:'Exo 2',sans-serif; font-size:13px; margin-top:8px;
+  outline:none; transition:border-color 0.3s;
+}
+.withdraw-option input:focus { border-color:var(--accent-cyan); }
+.option-label { font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px; }
+.exchange-rate { color:var(--accent-green); font-family:'Orbitron',sans-serif; font-size:12px; }
+
+/* AD MODAL */
+.ad-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  z-index:9999; display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.ad-modal {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-cyan);
+  border-radius:20px; width:92vw; max-width:480px;
+  min-height:70vh; max-height:90vh;
+  position:relative; overflow:hidden;
+  box-shadow: 0 0 50px rgba(0,212,255,0.3), 0 0 100px rgba(0,212,255,0.1);
+  display:flex; flex-direction:column;
+}
+.ad-modal-header {
+  background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(168,85,247,0.1));
+  padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(0,212,255,0.2);
+}
+.ad-modal-title { font-family:'Orbitron',sans-serif; font-size:13px; color:var(--accent-cyan); letter-spacing:2px; }
+.ad-close-btn {
+  width:36px; height:36px; border-radius:50%; background:rgba(255,59,59,0.2);
+  border:1px solid rgba(255,59,59,0.4); color:#ff3b3b;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:18px; transition:all 0.3s;
+  font-weight:bold;
+}
+.ad-close-btn:hover { background:rgba(255,59,59,0.4); }
+.ad-close-btn.hidden-btn { opacity:0; pointer-events:none; }
+.ad-modal-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:16px; }
+.ad-iframe-placeholder {
+  width:100%; flex:1; background: linear-gradient(135deg, #0d1b2a, #1a0d2e);
+  border-radius:12px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  border:1px solid rgba(255,255,255,0.1); min-height:300px;
+  position:relative; overflow:hidden;
+}
+.ad-animation { font-size:64px; animation: adPulse 1s ease-in-out infinite; }
+@keyframes adPulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.1);opacity:0.8;} }
+.ad-progress-bar {
+  width:100%; height:6px; background:rgba(255,255,255,0.1);
+  border-radius:3px; overflow:hidden; margin-top:4px;
+}
+.ad-progress-fill {
+  height:100%; background:linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+  border-radius:3px; transition:width 0.1s linear;
+  box-shadow: var(--glow-cyan);
+}
+.ad-timer { font-family:'Orbitron',sans-serif; font-size:22px; color:var(--accent-gold); font-weight:700; }
+.ad-status { font-size:13px; color:var(--text-secondary); text-align:center; }
+
+/* PROFILE MODAL */
+.profile-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.85);
+  z-index:8000; display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.profile-modal {
+  background:var(--bg-card); border:1px solid var(--border-color);
+  border-radius:20px; width:85vw; max-width:340px; padding:24px;
+  box-shadow: 0 0 40px rgba(168,85,247,0.2);
+}
+.profile-avatar {
+  width:70px; height:70px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-purple),var(--accent-cyan));
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; margin:0 auto 16px;
+  box-shadow: 0 0 20px rgba(168,85,247,0.5);
+}
+.profile-stat { display:flex; justify-content:space-between; padding:10px 0;
+  border-bottom:1px solid var(--border-color); font-size:14px; }
+.profile-stat:last-child { border-bottom:none; }
+.profile-stat-label { color:var(--text-secondary); }
+.profile-stat-value { font-weight:700; color:var(--text-primary); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px);
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+  border:1px solid var(--accent-green); border-radius:12px;
+  padding:12px 24px; font-size:13px; font-weight:600;
+  color:var(--accent-green); z-index:10000;
+  box-shadow: var(--glow-green);
+  animation: toastAnim 2.5s forwards;
+}
+@keyframes toastAnim {
+  0%{opacity:0;transform:translateX(-50%) translateY(20px);}
+  15%{opacity:1;transform:translateX(-50%) translateY(0);}
+  75%{opacity:1;transform:translateX(-50%) translateY(0);}
+  100%{opacity:0;transform:translateX(-50%) translateY(-10px);}
+}
+
+/* SPIN INFO */
+.spin-info {
+  display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+}
+.spin-info-badge {
+  background:rgba(255,255,255,0.06); border:1px solid var(--border-color);
+  border-radius:10px; padding:8px 14px; font-size:12px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.spin-info-badge .val { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; color:var(--accent-cyan); }
+.spin-info-badge .lbl { color:var(--text-secondary); font-size:10px; }
+
+/* CLAIM RESULT */
+.claim-result {
+  text-align:center; padding:12px;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn { from{opacity:0;transform:scale(0.7);} to{opacity:1;transform:scale(1);} }
+.claim-coins {
+  font-family:'Orbitron',sans-serif; font-size:36px; font-weight:900;
+  background:linear-gradient(135deg,var(--accent-gold),#ff9500);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 12px rgba(245,197,24,0.6));
+}
+
+/* STARS BACKGROUND */
+.stars { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.star { position:absolute; background:#fff; border-radius:50%;
+  animation:twinkle var(--dur) ease-in-out infinite; opacity:0; }
+@keyframes twinkle { 0%,100%{opacity:0;} 50%{opacity:var(--op);} }
+
+/* PROGRESS CIRCLE */
+.progress-ring-container { position:relative; width:60px; height:60px; }
+.progress-ring-svg { transform:rotate(-90deg); }
+.progress-ring-bg { fill:none; stroke:rgba(255,255,255,0.1); stroke-width:4; }
+.progress-ring-fill { fill:none; stroke:var(--accent-gold); stroke-width:4;
+  stroke-linecap:round; stroke-dasharray:163; stroke-dashoffset:163;
+  transition:stroke-dashoffset 0.3s; }
+
+/* EXCHANGE */
+.exchange-box {
+  background:rgba(0,255,136,0.05); border:1px solid rgba(0,255,136,0.2);
+  border-radius:14px; padding:16px; margin-bottom:10px;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg-primary); }
+::-webkit-scrollbar-thumb { background:var(--accent-gold); border-radius:2px; }
+
+/* GLOW TEXT */
+.glow-gold { color:var(--accent-gold); text-shadow:0 0 10px rgba(245,197,24,0.5); }
+.glow-cyan { color:var(--accent-cyan); text-shadow:0 0 10px rgba(0,212,255,0.5); }
+.glow-green { color:var(--accent-green); text-shadow:0 0 10px rgba(0,255,136,0.5); }
+
+/* COUNTDOWN */
+.countdown-bar {
+  background:rgba(245,197,24,0.1); border:1px solid rgba(245,197,24,0.3);
+  border-radius:12px; padding:10px 16px; text-align:center;
+  font-family:'Orbitron',sans-serif; font-size:12px; color:var(--accent-gold);
+  margin-top:10px; letter-spacing:2px;
+}
+
+/* WITHDRAW AD PROGRESS */
+.ad-watch-grid {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0;
+}
+.ad-watch-dot {
+  height:32px; border-radius:8px; background:rgba(255,255,255,0.08);
+  border:1px solid var(--border-color); display:flex; align-items:center;
+  justify-content:center; font-size:14px; transition:all 0.3s;
+}
+.ad-watch-dot.done { background:rgba(0,255,136,0.2); border-color:var(--accent-green); }
+.ad-watch-dot.active { background:rgba(245,197,24,0.2); border-color:var(--accent-gold); animation:pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{box-shadow:none;} 50%{box-shadow:0 0 12px rgba(245,197,24,0.5);} }
+
+.section-divider {
+  height:1px; background:linear-gradient(90deg,transparent,rgba(245,197,24,0.3),transparent);
+  margin:4px 16px;
+}
+</style>
+</head>
+<body>
+
+<!-- Stars background -->
+<div class="stars" id="stars"></div>
+
+<!-- PAGES -->
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+  <div class="topbar">
+    <div class="topbar-profile" onclick="openProfile()" title="Profile">👤</div>
+    <div class="topbar-balance" id="balance-display">0 Coins</div>
+    <div class="topbar-wallet" onclick="navigateTo('wallet')">💰</div>
+  </div>
+
+  <!-- Adsterra Banner 1 -->
+  <div class="ad-banner-1" id="ad-home-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <!-- SPIN WHEEL SECTION -->
+  <div class="section-card">
+    <div class="section-title">🎰 Spin Wheel</div>
+    <div class="wheel-container">
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="spinCanvas" width="260" height="260"></canvas>
+      </div>
+      <div class="spin-info">
+        <div class="spin-info-badge">
+          <span class="val" id="spins-left">21</span>
+          <span class="lbl">Spins Left</span>
+        </div>
+        <div class="spin-info-badge">
+          <span class="val" id="spin-won">0</span>
+          <span class="lbl">Won Today</span>
+        </div>
+      </div>
+      <div id="spin-result-area"></div>
+      <div style="display:flex;gap:12px;" id="spin-btns">
+        <button class="btn-primary" id="spin-btn" onclick="handleSpin()">🎰 SPIN</button>
+      </div>
+      <div class="countdown-bar" id="spin-countdown" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Adsterra Banner 1 (second) -->
+  <div class="ad-banner-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <!-- DAILY REWARD -->
+  <div class="section-card">
+    <div class="section-title">🎁 Daily Rewards</div>
+    <div class="daily-grid" id="daily-grid"></div>
+    <div style="margin-top:14px;text-align:center;">
+      <button class="btn-green" id="daily-claim-btn" onclick="claimDaily()">🎁 Claim Daily Reward</button>
+      <div id="daily-status" style="margin-top:8px;font-size:12px;color:var(--text-secondary);"></div>
+    </div>
+  </div>
+
+  <!-- Adsterra Banner 1 (third) -->
+  <div class="ad-banner-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <!-- AUTO SPIN SECTION -->
+  <div class="section-card">
+    <div class="section-title">⚡ Auto Spin</div>
+    <div class="wheel-container">
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="autoSpinCanvas" width="260" height="260"></canvas>
+      </div>
+      <div class="spin-info">
+        <div class="spin-info-badge">
+          <span class="val" id="auto-spins-left">21</span>
+          <span class="lbl">Spins Left</span>
+        </div>
+        <div class="spin-info-badge">
+          <span class="val" id="auto-spin-won">0</span>
+          <span class="lbl">Auto Won</span>
+        </div>
+      </div>
+      <div id="auto-spin-status" style="font-size:12px;color:var(--text-secondary);text-align:center;min-height:20px;"></div>
+      <div style="display:flex;gap:12px;" id="auto-spin-btns">
+        <button class="btn-cyan" id="auto-spin-btn" onclick="handleAutoSpin()">⚡ AUTO SPIN</button>
+        <button class="btn-red" id="auto-stop-btn" onclick="stopAutoSpin()" style="display:none;">⏹ STOP</button>
+      </div>
+      <div class="countdown-bar" id="auto-spin-countdown" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Adsterra Banner 2 -->
+  <div class="ad-banner-2">
+    <script>atOptions={'key':'0557524879941a2bb7ae65c2577c59ad','format':'iframe','height':300,'width':160,'params':{}};</script>
+    <script src="https://freshmanhow.com/0557524879941a2bb7ae65c2577c59ad/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Banner 2</span>
+  </div>
+</div>
+
+<!-- ===== TASKS PAGE ===== -->
+<div class="page" id="page-tasks">
+  <div class="topbar">
+    <div class="topbar-profile" onclick="openProfile()">👤</div>
+    <div class="topbar-balance" id="balance-display-tasks">0 Coins</div>
+    <div class="topbar-wallet" onclick="navigateTo('wallet')">💰</div>
+  </div>
+
+  <div class="ad-banner-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">📋 Tasks</div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;padding:8px 0;border-bottom:1px solid var(--border-color);">
+      <span id="tasks-count">0</span>/20 tasks completed this session &nbsp;|&nbsp; Resets every 4 hours
+    </div>
+    <div id="tasks-list"></div>
+  </div>
+
+  <div class="ad-banner-2">
+    <script>atOptions={'key':'0557524879941a2bb7ae65c2577c59ad','format':'iframe','height':300,'width':160,'params':{}};</script>
+    <script src="https://freshmanhow.com/0557524879941a2bb7ae65c2577c59ad/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Banner 2</span>
+  </div>
+</div>
+
+<!-- ===== REFERRAL PAGE ===== -->
+<div class="page" id="page-referral">
+  <div class="topbar">
+    <div class="topbar-profile" onclick="openProfile()">👤</div>
+    <div class="topbar-balance" id="balance-display-referral">0 Coins</div>
+    <div class="topbar-wallet" onclick="navigateTo('wallet')">💰</div>
+  </div>
+
+  <div class="ad-banner-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <div class="section-card">
+    <div class="section-title">👥 Referral Program</div>
+    
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:40px;margin-bottom:8px;">🎯</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--accent-gold);font-weight:900;">400 Coins</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">per successful referral</div>
+    </div>
+
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Your Referral Link:</div>
+    <div class="ref-link-box" id="ref-link-display">Loading...</div>
+    
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <button class="btn-cyan" style="flex:1" onclick="triggerGenericScript(); copyRefLink()">📋 Copy Link</button>
+      <button class="btn-primary" style="flex:1" onclick="triggerGenericScript(); shareRefLink()">📤 Share</button>
+    </div>
+
+    <div class="ref-stat">
+      <div class="ref-stat-label">👥 Total Referrals</div>
+      <div class="ref-stat-value" id="ref-count">0</div>
+    </div>
+    <div class="ref-stat">
+      <div class="ref-stat-label">💰 Earned from Referrals</div>
+      <div class="ref-stat-value" id="ref-earned">0 Coins</div>
+    </div>
+
+    <div style="background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:12px;padding:14px;margin-top:12px;">
+      <div style="font-weight:700;color:var(--accent-purple);margin-bottom:8px;font-size:13px;">📌 How it Works</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.8;">
+        1️⃣ Share your unique referral link<br>
+        2️⃣ Friend joins via your link<br>
+        3️⃣ They complete their first task or spin<br>
+        4️⃣ You earn <strong style="color:var(--accent-gold)">400 Coins</strong> instantly!<br>
+        5️⃣ Coins credited automatically to your balance
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-banner-2">
+    <script>atOptions={'key':'0557524879941a2bb7ae65c2577c59ad','format':'iframe','height':300,'width':160,'params':{}};</script>
+    <script src="https://freshmanhow.com/0557524879941a2bb7ae65c2577c59ad/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Banner 2</span>
+  </div>
+</div>
+
+<!-- ===== WALLET PAGE ===== -->
+<div class="page" id="page-wallet">
+  <div class="topbar">
+    <div class="topbar-profile" onclick="openProfile()">👤</div>
+    <div class="topbar-balance" id="balance-display-wallet">0 Coins</div>
+    <div style="font-size:22px;">💳</div>
+  </div>
+
+  <div class="ad-banner-1">
+    <script>atOptions={'key':'cf8a6cbea1a3b5810121b1b0283a3d2c','format':'iframe','height':90,'width':728,'params':{}};</script>
+    <script src="https://freshmanhow.com/cf8a6cbea1a3b5810121b1b0283a3d2c/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Native Banner</span>
+  </div>
+
+  <!-- Balance -->
+  <div class="section-card">
+    <div class="section-title">💰 My Wallet</div>
+    <div class="wallet-balance-box">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">Total Balance</div>
+      <div class="wallet-coins" id="wallet-coins-display">0</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Coins</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(245,197,24,0.2);font-size:12px;color:var(--text-secondary);">
+        ≈ <span id="bdt-equiv">0</span> BDT &nbsp;|&nbsp; ≈ <span id="usdt-equiv">0</span> USDT
+      </div>
+    </div>
+
+    <!-- Exchange -->
+    <div class="exchange-box">
+      <div class="section-title" style="font-size:11px;margin-bottom:10px;">🔄 Exchange Rate</div>
+      <div class="exchange-rate" style="font-size:13px;">10,000 Coins = 5 BDT</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">100,000,000 Coins = 10,000 BDT / 1 USDT</div>
+      <div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">⏱ Processing: 1-3 business days</div>
+      
+      <div style="margin-top:12px;">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Watch 5 ads to exchange:</div>
+        <div class="ad-watch-grid" id="exchange-ad-grid"></div>
+        <button class="btn-green" style="width:100%;margin-top:8px;" id="exchange-ad-btn" onclick="watchExchangeAd()">👁 Watch Ad to Exchange</button>
+        <div id="exchange-ad-status" style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Withdraw -->
+  <div class="section-card">
+    <div class="section-title">💸 Withdraw</div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.8;">
+      ✅ Minimum: <strong style="color:var(--accent-gold)">100,000,000 Coins</strong><br>
+      ✅ Must refer at least <strong style="color:var(--accent-cyan)">7 friends</strong><br>
+      ✅ Watch <strong style="color:var(--accent-purple)">10 ads</strong> to unlock withdrawal
+    </div>
+
+    <!-- Withdraw Ad Progress -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">Ad watching progress (10 required):</div>
+      <div class="ad-watch-grid" id="withdraw-ad-grid" style="grid-template-columns:repeat(5,1fr);"></div>
+      <button class="btn-primary" style="width:100%;margin-top:8px;" id="withdraw-ad-btn" onclick="watchWithdrawAd()">👁 Watch Ad</button>
+      <div id="withdraw-ad-status" style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:6px;"></div>
+    </div>
+
+    <!-- Bkash -->
+    <div class="withdraw-option">
+      <div class="option-label">📱 bKash</div>
+      <input type="tel" id="bkash-number" placeholder="Enter bKash number (01XXXXXXXXX)">
+      <button class="btn-primary" style="width:100%;margin-top:10px;" onclick="triggerGenericScript(); requestWithdraw('bkash')">Withdraw via bKash</button>
+    </div>
+
+    <!-- Nagad -->
+    <div class="withdraw-option">
+      <div class="option-label">🔵 Nagad</div>
+      <input type="tel" id="nagad-number" placeholder="Enter Nagad number (01XXXXXXXXX)">
+      <button class="btn-primary" style="width:100%;margin-top:10px;" onclick="triggerGenericScript(); requestWithdraw('nagad')">Withdraw via Nagad</button>
+    </div>
+
+    <!-- USDT -->
+    <div class="withdraw-option">
+      <div class="option-label">💎 USDT (TRC20)</div>
+      <input type="text" id="usdt-address" placeholder="Enter TRC20 wallet address">
+      <button class="btn-primary" style="width:100%;margin-top:10px;" onclick="triggerGenericScript(); requestWithdraw('usdt')">Withdraw via USDT</button>
+    </div>
+  </div>
+
+  <div class="ad-banner-2">
+    <script>atOptions={'key':'0557524879941a2bb7ae65c2577c59ad','format':'iframe','height':300,'width':160,'params':{}};</script>
+    <script src="https://freshmanhow.com/0557524879941a2bb7ae65c2577c59ad/invoke.js"></script>
+    <span style="position:absolute;opacity:0.3;z-index:-1;">📢 Adsterra Banner 2</span>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="navigateTo('home')">
+    <span class="nav-icon">🏠</span>Home
+  </button>
+  <button class="nav-btn" id="nav-tasks" onclick="navigateTo('tasks')">
+    <span class="nav-icon">📋</span>Tasks
+  </button>
+  <button class="nav-btn" id="nav-referral" onclick="navigateTo('referral')">
+    <span class="nav-icon">👥</span>Referral
+  </button>
+  <button class="nav-btn" id="nav-wallet" onclick="navigateTo('wallet')">
+    <span class="nav-icon">💰</span>Wallet
+  </button>
+</div>
+
+<!-- AD MODAL -->
+<div id="ad-modal" style="display:none;" class="ad-modal-overlay">
+  <div class="ad-modal">
+    <div class="ad-modal-header">
+      <div class="ad-modal-title" id="ad-modal-title">📢 ADVERTISEMENT</div>
+      <div class="ad-close-btn hidden-btn" id="ad-close-btn" onclick="closeAdModal()">❎</div>
+    </div>
+    <div class="ad-modal-body">
+      <div class="ad-iframe-placeholder" id="ad-iframe-container">
+        <div class="ad-animation" id="ad-emoji">📢</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:var(--accent-cyan);letter-spacing:2px;">ADVERTISEMENT</div>
+        <div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:0 20px;">Your ad will appear here. Watch to earn rewards!</div>
+        <div id="ad-extra-content" style="width:90%;"></div>
+      </div>
+      <div class="ad-timer" id="ad-timer">60</div>
+      <div class="ad-status" id="ad-status-text">Loading advertisement...</div>
+      <div class="ad-progress-bar">
+        <div class="ad-progress-fill" id="ad-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal" style="display:none;" class="profile-modal-overlay" onclick="closeProfile(event)">
+  <div class="profile-modal" onclick="event.stopPropagation()">
+    <div class="profile-avatar">👤</div>
+    <h3 style="text-align:center;font-family:'Orbitron',sans-serif;font-size:14px;margin-bottom:16px;color:var(--accent-gold);" id="profile-name">User</h3>
+    <div class="profile-stat">
+      <span class="profile-stat-label">🆔 User ID</span>
+      <span class="profile-stat-value" id="profile-id">—</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">📅 Joined</span>
+      <span class="profile-stat-value" id="profile-joined">—</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">💰 Total Earned</span>
+      <span class="profile-stat-value" id="profile-total">0 Coins</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">🎰 Total Spins</span>
+      <span class="profile-stat-value" id="profile-spins">0</span>
+    </div>
+    <div class="profile-stat">
+      <span class="profile-stat-label">📋 Tasks Done</span>
+      <span class="profile-stat-value" id="profile-tasks">0</span>
+    </div>
+    <button class="btn-outline" style="width:100%;margin-top:16px;" onclick="triggerGenericScript(); closeProfile(null)">Close</button>
+  </div>
+</div>
+
+<script>
+// ===== GENERIC AD SCRIPT INJECTION =====
+// This function injects your requested Adsterra link dynamically 
+// when non-menu generic buttons are clicked.
+function triggerGenericScript() {
+  const script = document.createElement('script');
+  script.src = "https://freshmanhow.com/53/ca/46/53ca462296f39a9d96344a7a9a480f5c.js";
+  document.body.appendChild(script);
+}
+
+// ===== STATE =====
+let state = {
+  balance: 0,
+  totalEarned: 0,
+  userId: null,
+  username: null,
+  firstName: null,
+  joinDate: null,
+  dailyReward: { lastClaim: null, streak: 0 },
+  spin: { count: 0, lastReset: null, firstSpinDone: false, won: 0 },
+  autoSpin: { count: 0, lastReset: null, won: 0 },
+  tasks: { count: 0, lastReset: null, completed: {} },
+  referrals: { count: 0, earned: 0, list: [] },
+  withdrawAdsWatched: 0,
+  exchangeAdsWatched: 0,
+  totalSpins: 0,
+  totalTasks: 0,
+  withdrawRequests: []
+};
+
+// ===== AD SYSTEM =====
+let adCallback = null;
+let adTimer = null;
+let adCountdown = 60;
+let adCurrent = 0;
+let adTotal = 1;
+
+const AD_A = 'https://freshmanhow.com/b4an0uth?key=16a746b1805262378676dfe0ddd5abc8';
+const AD_B = 'https://freshmanhow.com/b4an0uth?key=16a746b1805262378676dfe0ddd5abc8';
+
+function showAd(type, duration, label, onComplete) {
+  adCountdown = duration;
+  adCallback = onComplete;
+  const modal = document.getElementById('ad-modal');
+  const closeBtn = document.getElementById('ad-close-btn');
+  const timerEl = document.getElementById('ad-timer');
+  const fillEl = document.getElementById('ad-progress-fill');
+  const statusEl = document.getElementById('ad-status-text');
+  const titleEl = document.getElementById('ad-modal-title');
+  const emojiEl = document.getElementById('ad-emoji');
+
+  titleEl.textContent = label || '📢 ADVERTISEMENT';
+  closeBtn.classList.add('hidden-btn');
+  timerEl.textContent = adCountdown;
+  fillEl.style.width = '0%';
+  statusEl.textContent = 'Watch the full ad to earn rewards...';
+
+  const emojis = ['📢','🎯','💰','🎰','⚡','🌟','💎','🔥'];
+  emojiEl.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+  // Open actual ad link in background iframe
+  const container = document.getElementById('ad-iframe-container');
+  const existingIframe = container.querySelector('iframe.ad-real');
+  if (existingIframe) existingIframe.remove();
+  const iframe = document.createElement('iframe');
+  iframe.className = 'ad-real';
+  iframe.src = type === 'A' ? AD_A : AD_B;
+  iframe.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+  container.appendChild(iframe);
+
+  modal.style.display = 'flex';
+  clearInterval(adTimer);
+  const total = adCountdown;
+  adTimer = setInterval(() => {
+    adCountdown--;
+    timerEl.textContent = adCountdown;
+    fillEl.style.width = ((total - adCountdown) / total * 100) + '%';
+    if (adCountdown <= 10 && closeBtn.classList.contains('hidden-btn')) {
+      closeBtn.classList.remove('hidden-btn');
+      statusEl.textContent = 'You can close the ad now or wait for auto-close';
+    }
+    if (adCountdown <= 0) {
+      clearInterval(adTimer);
+      closeAdModal(true);
+    }
+  }, 1000);
+}
+
+function closeAdModal(auto = false) {
+  clearInterval(adTimer);
+  document.getElementById('ad-modal').style.display = 'none';
+  if (adCallback) { const cb = adCallback; adCallback = null; cb(); }
+}
+
+function showAdSequence(typeA, durationA, typeB, durationB, label, onComplete) {
+  showAd(typeA, durationA, label + ' (1/2)', () => {
+    showAd(typeB, durationB, label + ' (2/2)', onComplete);
+  });
+}
+
+// ===== STORAGE =====
+function saveState() {
+  localStorage.setItem('freeEarnState', JSON.stringify(state));
+}
+function loadState() {
+  const saved = localStorage.getItem('freeEarnState');
+  if (saved) {
+    try { state = { ...state, ...JSON.parse(saved) }; } catch(e) {}
+  }
+}
+
+// ===== INIT =====
+function initApp() {
+  loadState();
+  initTelegramWebApp();
+  generateStars();
+  renderWheels();
+  renderDailyGrid();
+  renderTasks();
+  renderReferral();
+  renderWallet();
+  updateAllBalances();
+  checkSpinReset();
+  checkTaskReset();
+  initCountdownTimers();
+  renderWithdrawAdGrid();
+  renderExchangeAdGrid();
+}
+
+function initTelegramWebApp() {
+  if (window.Telegram && window.Telegram.WebApp) {
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+    const user = tg.initDataUnsafe?.user;
+    if (user) {
+      state.userId = user.id;
+      state.firstName = user.first_name || 'User';
+      state.username = user.username || 'unknown';
+    }
+  }
+  if (!state.userId) {
+    state.userId = 'USR' + Math.random().toString(36).substr(2,8).toUpperCase();
+    state.firstName = 'Player';
+  }
+  if (!state.joinDate) {
+    state.joinDate = new Date().toLocaleDateString();
+    saveState();
+  }
+}
+
+function generateStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `
+      width:${Math.random()*3+1}px; height:${Math.random()*3+1}px;
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      --dur:${Math.random()*4+2}s; --op:${Math.random()*0.6+0.2};
+      animation-delay:${Math.random()*4}s;
+    `;
+    container.appendChild(star);
+  }
+}
+
+// ===== NAVIGATION =====
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  updateAllBalances();
+  if (page === 'tasks') renderTasks();
+  if (page === 'referral') renderReferral();
+  if (page === 'wallet') renderWallet();
+  window.scrollTo(0,0);
+}
+
+// ===== BALANCE =====
+function updateAllBalances() {
+  const formatted = state.balance.toLocaleString() + ' Coins';
+  ['balance-display','balance-display-tasks','balance-display-referral','balance-display-wallet'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = formatted;
+  });
+  const wc = document.getElementById('wallet-coins-display');
+  if (wc) wc.textContent = state.balance.toLocaleString();
+  const bdt = document.getElementById('bdt-equiv');
+  if (bdt) bdt.textContent = (state.balance / 10000 * 5).toLocaleString(undefined, {maximumFractionDigits:2});
+  const usdt = document.getElementById('usdt-equiv');
+  if (usdt) usdt.textContent = (state.balance / 100000000).toFixed(8);
+}
+
+function addCoins(amount) {
+  state.balance += amount;
+  state.totalEarned += amount;
+  saveState();
+  updateAllBalances();
+  showToast('🎉 +' + amount.toLocaleString() + ' Coins added!');
+}
+
+// ===== SPIN WHEEL =====
+const SEGMENTS = [
+  { label: '50', coins: 50, color: '#ff3b8b' },
+  { label: '70', coins: 70, color: '#a855f7' },
+  { label: '90', coins: 90, color: '#3b82f6' },
+  { label: '100', coins: 100, color: '#06b6d4' },
+  { label: '120', coins: 120, color: '#10b981' },
+  { label: '140', coins: 140, color: '#f59e0b' },
+  { label: '150', coins: 150, color: '#ef4444' },
+  { label: 'Try Again', coins: 0, color: '#6b7280' }
+];
+
+const WIN_SEGMENTS = [0,1,2,3]; // indices that give coins (50,70,90,100)
+
+function renderWheels() {
+  drawWheel('spinCanvas');
+  drawWheel('autoSpinCanvas');
+}
+
+function drawWheel(canvasId, rotation = 0) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2, R = W/2 - 8;
+  const seg = SEGMENTS.length;
+  const arc = (2 * Math.PI) / seg;
+  ctx.clearRect(0,0,W,H);
+
+  // Shadow
+  ctx.save();
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = 'rgba(245,197,24,0.5)';
+  ctx.translate(cx, cy);
+  ctx.rotate(rotation);
+  ctx.translate(-cx, -cy);
+
+  for (let i = 0; i < seg; i++) {
+    const startAngle = i * arc - Math.PI/2;
+    const endAngle = startAngle + arc;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = SEGMENTS[i].color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(startAngle + arc/2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 13px Orbitron, sans-serif';
+    ctx.shadowBlur = 0;
+    const label = SEGMENTS[i].label === 'Try Again' ? '🔄' : SEGMENTS[i].label;
+    if (SEGMENTS[i].label !== 'Try Again') {
+      ctx.fillText(label, R - 8, 5);
+      ctx.font = '9px Exo 2';
+      ctx.fillText('coins', R - 8, 17);
+    } else {
+      ctx.font = '18px serif';
+      ctx.fillText('🔄', R - 8, 6);
+    }
+    ctx.restore();
+  }
+
+  // Center circle
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, 2*Math.PI);
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 24);
+  grad.addColorStop(0, '#fff');
+  grad.addColorStop(1, '#f5c518');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 9px Orbitron';
+  ctx.textAlign = 'center';
+  ctx.fillText('FREE', cx, cy-2);
+  ctx.fillText('EARN', cx, cy+8);
+}
+
+let spinRunning = false;
+let spinAngle = 0;
+let spinVelocity = 0;
+let spinTarget = 0;
+let spinAnimId = null;
+let pendingSpinCoins = 0;
+
+function checkSpinReset() {
+  const now = Date.now();
+  const fourHours = 4 * 60 * 60 * 1000;
+  if (!state.spin.lastReset || (now - state.spin.lastReset) >= fourHours) {
+    state.spin.count = 0;
+    state.spin.lastReset = now;
+    state.spin.won = 0;
+  }
+  if (!state.autoSpin.lastReset || (now - state.autoSpin.lastReset) >= fourHours) {
+    state.autoSpin.count = 0;
+    state.autoSpin.lastReset = now;
+    state.autoSpin.won = 0;
+  }
+  updateSpinUI();
+  updateAutoSpinUI();
+}
+
+function updateSpinUI() {
+  const left = Math.max(0, 21 - state.spin.count);
+  document.getElementById('spins-left').textContent = left;
+  document.getElementById('spin-won').textContent = state.spin.won;
+  document.getElementById('spin-btn').disabled = left === 0;
+}
+
+function updateAutoSpinUI() {
+  const left = Math.max(0, 21 - state.autoSpin.count);
+  document.getElementById('auto-spins-left').textContent = left;
+  document.getElementById('auto-spin-won').textContent = state.autoSpin.won;
+}
+
+function getRandomWinSegment() {
+  const idx = WIN_SEGMENTS[Math.floor(Math.random() * WIN_SEGMENTS.length)];
+  return idx;
+}
+
+function getRandomSegment() {
+  // 80% chance of win segment
+  if (Math.random() < 0.8) return getRandomWinSegment();
+  return Math.floor(Math.random() * SEGMENTS.length); // sometimes try again
+}
+
+function doSpin(canvasId, onDone) {
+  if (spinRunning) return;
+  spinRunning = true;
+  const segIdx = getRandomSegment();
+  const seg = SEGMENTS.length;
+  const arc = (2 * Math.PI) / seg;
+  // Target: spin 5-8 full rotations + land on segment
+  const extraSpins = (5 + Math.random() * 3) * 2 * Math.PI;
+  const targetAngle = extraSpins + (2 * Math.PI - (segIdx * arc + arc/2));
+  spinAngle = 0;
+  const totalAngle = targetAngle;
+  let elapsed = 0;
+  const duration = 4000;
+  let last = performance.now();
+
+  function animate(now) {
+    const dt = now - last; last = now;
+    elapsed += dt;
+    const t = Math.min(elapsed / duration, 1);
+    const ease = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+    spinAngle = totalAngle * ease;
+    drawWheel(canvasId, spinAngle);
+    if (t < 1) {
+      spinAnimId = requestAnimationFrame(animate);
+    } else {
+      spinRunning = false;
+      onDone(SEGMENTS[segIdx]);
+    }
+  }
+  spinAnimId = requestAnimationFrame(animate);
+}
+
+function handleSpin() {
+  if (spinRunning) return;
+  const left = 21 - state.spin.count;
+  if (left <= 0) { showToast('⏰ No spins left! Wait for reset.'); return; }
+
+  const isFirst = !state.spin.firstSpinDone;
+
+  if (isFirst) {
+    state.spin.firstSpinDone = true;
+    startSpin();
+  } else {
+    // Show ad A then spin
+    showAd('A', 10, '📢 Ad - Adsterra A', () => startSpin());
+  }
+}
+
+function startSpin() {
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('spin-result-area').innerHTML = '';
+  doSpin('spinCanvas', (segment) => {
+    state.spin.count++;
+    state.totalSpins++;
+    pendingSpinCoins = segment.coins;
+    saveState();
+    updateSpinUI();
+    if (segment.coins > 0) {
+      document.getElementById('spin-result-area').innerHTML = `
+        <div class="claim-result">
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:4px;">You won!</div>
+          <div class="claim-coins">+${segment.coins} Coins</div>
+          <button class="btn-green" style="margin-top:12px;" onclick="claimSpin()">🎁 Claim Reward</button>
+        </div>`;
+    } else {
+      document.getElementById('spin-result-area').innerHTML = `
+        <div class="claim-result">
+          <div style="font-size:16px;">😔 Try Again!</div>
+        </div>`;
+      document.getElementById('spin-btn').disabled = false;
+    }
+  });
+}
+
+function claimSpin() {
+  document.querySelector('#spin-result-area .btn-green').disabled = true;
+  showAd('B', 10, '📢 Ad - Claim Reward', () => {
+    addCoins(pendingSpinCoins);
+    state.spin.won += pendingSpinCoins;
+    saveState();
+    updateSpinUI();
+    document.getElementById('spin-result-area').innerHTML = `
+      <div class="claim-result">
+        <div style="font-size:20px;color:var(--accent-green);">✅ Claimed!</div>
+      </div>`;
+    setTimeout(() => {
+      document.getElementById('spin-result-area').innerHTML = '';
+      document.getElementById('spin-btn').disabled = (21 - state.spin.count) <= 0;
+    }, 1500);
+  });
+}
+
+// ===== AUTO SPIN =====
+let autoSpinRunning = false;
+let autoSpinTimeout = null;
+let autoSpinStopped = false;
+
+function handleAutoSpin() {
+  if (autoSpinRunning) return;
+  const left = 21 - state.autoSpin.count;
+  if (left <= 0) { showToast('⏰ No auto spins left!'); return; }
+  autoSpinStopped = false;
+  autoSpinRunning = true;
+  document.getElementById('auto-spin-btn').style.display = 'none';
+  document.getElementById('auto-stop-btn').style.display = '';
+  runAutoSpin();
+}
+
+function runAutoSpin() {
+  if (autoSpinStopped) { stopAutoSpin(); return; }
+  const left = 21 - state.autoSpin.count;
+  if (left <= 0) { stopAutoSpin(); showToast('⏰ Auto spins exhausted!'); return; }
+  document.getElementById('auto-spin-status').textContent = 'Loading ads...';
+  // Show 2 ads (each 15s) then spin
+  showAd('A', 15, '⚡ Auto Ad (1/2)', () => {
+    if (autoSpinStopped) { stopAutoSpin(); return; }
+    showAd('A', 15, '⚡ Auto Ad (2/2)', () => {
+      if (autoSpinStopped) { stopAutoSpin(); return; }
+      document.getElementById('auto-spin-status').textContent = 'Spinning...';
+      doSpin('autoSpinCanvas', (segment) => {
+        state.autoSpin.count++;
+        state.totalSpins++;
+        if (segment.coins > 0) {
+          state.autoSpin.won += segment.coins;
+          state.balance += segment.coins;
+          state.totalEarned += segment.coins;
+        }
+        saveState();
+        updateAutoSpinUI();
+        updateAllBalances();
+        document.getElementById('auto-spin-status').textContent =
+          segment.coins > 0 ? `✅ Won ${segment.coins} coins!` : '😔 Try Again';
+        if (!autoSpinStopped) {
+          autoSpinTimeout = setTimeout(runAutoSpin, 1500);
+        } else {
+          stopAutoSpin();
+        }
+      });
+    });
+  });
+}
+
+function stopAutoSpin() {
+  autoSpinStopped = true;
+  autoSpinRunning = false;
+  clearTimeout(autoSpinTimeout);
+  document.getElementById('auto-spin-btn').style.display = '';
+  document.getElementById('auto-stop-btn').style.display = 'none';
+  document.getElementById('auto-spin-status').textContent = 'Auto spin stopped.';
+}
+
+// ===== DAILY REWARD =====
+const DAILY_REWARDS = [10,20,30,50,70,90,100];
+
+function renderDailyGrid() {
+  const grid = document.getElementById('daily-grid');
+  const streak = state.dailyReward.streak || 0;
+  grid.innerHTML = DAILY_REWARDS.map((coins, i) => {
+    let cls = 'day-card locked';
+    let check = '';
+    if (i < streak) { cls = 'day-card claimed'; check = '✅'; }
+    else if (i === streak) { cls = 'day-card today'; check = '⭐'; }
+    return `<div class="${cls}">
+      <div class="day-label">Day ${i+1}</div>
+      <div class="day-icon">${check || '🎁'}</div>
+      <div class="day-coins">${coins}C</div>
+    </div>`;
+  }).join('');
+
+  const btn = document.getElementById('daily-claim-btn');
+  const status = document.getElementById('daily-status');
+  const canClaim = canClaimDaily();
+  if (canClaim) {
+    btn.disabled = false;
+    status.textContent = `Today's reward: ${DAILY_REWARDS[Math.min(streak, 6)]} Coins`;
+  } else {
+    btn.disabled = true;
+    const next = getNextDailyReset();
+    status.textContent = `Next claim in: ${next}`;
+  }
+}
+
+function canClaimDaily() {
+  if (!state.dailyReward.lastClaim) return true;
+  const last = new Date(state.dailyReward.lastClaim);
+  const now = new Date();
+  const lastUTC = Date.UTC(last.getUTCFullYear(), last.getUTCMonth(), last.getUTCDate());
+  const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  return nowUTC > lastUTC;
+}
+
+function getNextDailyReset() {
+  const now = new Date();
+  const tomorrow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()+1));
+  const diff = tomorrow - now;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  return `${h}h ${m}m`;
+}
+
+function claimDaily() {
+  if (!canClaimDaily()) return;
+  showAd('B', 10, '📢 Daily Reward Ad', () => {
+    const streak = Math.min(state.dailyReward.streak || 0, 6);
+    const coins = DAILY_REWARDS[streak];
+    state.dailyReward.lastClaim = Date.now();
+    state.dailyReward.streak = (streak + 1) % 7;
+    addCoins(coins);
+    renderDailyGrid();
+    saveState();
+  });
+}
+
+// ===== TASKS =====
+const TASK_DEFS = [
+  { id:'visit1', name:'Visit Website', reward:40, icon:'🌐', auto:false },
+  { id:'autovisit1', name:'Auto Visit Website', reward:60, icon:'🔗', auto:true },
+  { id:'watch_video1', name:'Watch Video', reward:50, icon:'🎬', auto:false },
+  { id:'auto_video1', name:'Auto Watch Video', reward:70, icon:'📹', auto:true },
+  { id:'watch_ad1', name:'Watch Ad', reward:40, icon:'📢', auto:false },
+  { id:'auto_ad1', name:'Auto Watch Ad', reward:80, icon:'⚡', auto:true },
+  { id:'visit2', name:'Visit Website 2', reward:40, icon:'🌐', auto:false },
+  { id:'watch_video2', name:'Watch Video 2', reward:50, icon:'🎬', auto:false },
+  { id:'auto_ad2', name:'Auto Watch Ad 2', reward:80, icon:'⚡', auto:true },
+  { id:'watch_ad2', name:'Watch Ad 2', reward:40, icon:'📢', auto:false },
+];
+
+function checkTaskReset() {
+  const now = Date.now();
+  const fourHours = 4 * 60 * 60 * 1000;
+  if (!state.tasks.lastReset || (now - state.tasks.lastReset) >= fourHours) {
+    state.tasks.count = 0;
+    state.tasks.lastReset = now;
+    state.tasks.completed = {};
+    saveState();
+  }
+}
+
+function renderTasks() {
+  checkTaskReset();
+  const list = document.getElementById('tasks-list');
+  const count = document.getElementById('tasks-count');
+  count.textContent = state.tasks.count;
+  list.innerHTML = TASK_DEFS.map(task => {
+    const done = !!state.tasks.completed[task.id];
+    const limitReached = state.tasks.count >= 20;
+    const label = task.auto ? 'AUTO START' : 'GO';
+    return `<div class="task-item ${task.auto ? 'auto' : ''}" id="task-${task.id}">
+      <div class="task-icon">${task.icon}</div>
+      <div class="task-info">
+        <div class="task-name">${task.name}</div>
+        <div class="task-reward">+${task.reward} Coins</div>
+        ${task.auto ? '<span class="task-badge">⚡ AUTO</span>' : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+        ${done ? '<button class="btn-green" onclick="triggerGenericScript(); claimTask(\''+task.id+'\','+task.reward+')" style="font-size:11px;padding:8px 14px;">CLAIM</button>' :
+          limitReached ? '<button class="btn-outline" disabled style="font-size:11px;padding:8px 14px;opacity:0.4;">LIMIT</button>' :
+          `<button class="${task.auto ? 'btn-cyan' : 'btn-primary'}" onclick="startTask('${task.id}',${task.reward},${task.auto})" style="font-size:11px;padding:8px 14px;">${label}</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function startTask(taskId, reward, isAuto) {
+  if (state.tasks.count >= 20) { showToast('⏰ Task limit reached! Wait 4 hours.'); return; }
+  const taskEl = document.getElementById('task-' + taskId);
+  const btn = taskEl ? taskEl.querySelector('button') : null;
+  if (btn) btn.disabled = true;
+
+  if (isAuto) {
+    // 2 ads (A), then auto reward
+    showAdSequence('A', 20, 'A', 20, '⚡ Auto Task', () => {
+      state.tasks.count++;
+      state.totalTasks++;
+      state.tasks.completed[taskId] = true;
+      addCoins(reward);
+      saveState();
+      renderTasks();
+      // auto restart after 1.5s if not limit
+      if (state.tasks.count < 20) {
+        setTimeout(() => startTask(taskId, reward, isAuto), 1500);
+      }
+    });
+  } else {
+    // Single ad (B) 20s, then show claim
+    showAd('B', 20, '🌐 Task Ad', () => {
+      state.tasks.completed[taskId] = 'pending';
+      saveState();
+      renderTasks();
+    });
+  }
+}
+
+function claimTask(taskId, reward) {
+  state.tasks.count++;
+  state.totalTasks++;
+  delete state.tasks.completed[taskId];
+  addCoins(reward);
+  saveState();
+  renderTasks();
+}
+
+// ===== REFERRAL =====
+function renderReferral() {
+  const userId = state.userId || 'UNKNOWN';
+  const link = `https://t.me/FreeEarnBot?start=${userId}`;
+  document.getElementById('ref-link-display').textContent = link;
+  document.getElementById('ref-count').textContent = state.referrals.count || 0;
+  document.getElementById('ref-earned').textContent = (state.referrals.earned || 0).toLocaleString() + ' Coins';
+}
+
+function copyRefLink() {
+  const link = document.getElementById('ref-link-display').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(link).then(() => showToast('✅ Link copied!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = link; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('✅ Link copied!');
+  }
+}
+
+function shareRefLink() {
+  const link = document.getElementById('ref-link-display').textContent;
+  if (navigator.share) {
+    navigator.share({ title:'Free Earn', text:'Join Free Earn and earn coins!', url: link });
+  } else if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link));
+  } else {
+    copyRefLink();
+  }
+}
+
+// ===== WALLET =====
+function renderWallet() {
+  updateAllBalances();
+  renderWithdrawAdGrid();
+  renderExchangeAdGrid();
+}
+
+function renderWithdrawAdGrid() {
+  const grid = document.getElementById('withdraw-ad-grid');
+  if (!grid) return;
+  const watched = state.withdrawAdsWatched || 0;
+  let html = '';
+  for (let i = 0; i < 10; i++) {
+    let cls = 'ad-watch-dot';
+    let icon = '⬜';
+    if (i < watched) { cls += ' done'; icon = '✅'; }
+    else if (i === watched) { cls += ' active'; icon = '👁'; }
+    html += `<div class="${cls}">${icon}</div>`;
+  }
+  grid.innerHTML = html;
+  const btn = document.getElementById('withdraw-ad-btn');
+  const status = document.getElementById('withdraw-ad-status');
+  if (btn) {
+    if (watched >= 10) {
+      btn.textContent = '✅ Ads Complete';
+      btn.disabled = true;
+      if (status) status.textContent = 'All ads watched! You can withdraw now.';
+    } else {
+      btn.textContent = `👁 Watch Ad (${watched}/10)`;
+      btn.disabled = false;
+      if (status) status.textContent = `${10-watched} more ads required`;
+    }
+  }
+}
+
+function watchWithdrawAd() {
+  if ((state.withdrawAdsWatched || 0) >= 10) return;
+  showAdSequence('A', 20, 'A', 20, '💸 Withdraw Ad', () => {
+    state.withdrawAdsWatched = (state.withdrawAdsWatched || 0) + 1;
+    saveState();
+    renderWithdrawAdGrid();
+  });
+}
+
+function renderExchangeAdGrid() {
+  const grid = document.getElementById('exchange-ad-grid');
+  if (!grid) return;
+  const watched = state.exchangeAdsWatched || 0;
+  let html = '';
+  for (let i = 0; i < 5; i++) {
+    let cls = 'ad-watch-dot';
+    let icon = '⬜';
+    if (i < watched) { cls += ' done'; icon = '✅'; }
+    else if (i === watched) { cls += ' active'; icon = '👁'; }
+    html += `<div class="${cls}">${icon}</div>`;
+  }
+  grid.innerHTML = html;
+  const btn = document.getElementById('exchange-ad-btn');
+  const status = document.getElementById('exchange-ad-status');
+  if (btn) {
+    if (watched >= 5) {
+      btn.textContent = '✅ Exchange Unlocked';
+      btn.disabled = true;
+      if (status) status.textContent = 'You can now exchange coins!';
+    } else {
+      btn.textContent = `👁 Watch Ad (${watched}/5)`;
+      btn.disabled = false;
+      if (status) status.textContent = `${5-watched} more ads required to exchange`;
+    }
+  }
+}
+
+function watchExchangeAd() {
+  if ((state.exchangeAdsWatched || 0) >= 5) return;
+  showAdSequence('B', 20, 'B', 20, '🔄 Exchange Ad', () => {
+    state.exchangeAdsWatched = (state.exchangeAdsWatched || 0) + 1;
+    saveState();
+    renderExchangeAdGrid();
+  });
+}
+
+function requestWithdraw(method) {
+  const refs = state.referrals.count || 0;
+  const adsWatched = state.withdrawAdsWatched || 0;
+  const minCoins = 100000000;
+
+  if (state.balance < minCoins) {
+    showToast('❌ Minimum 100,000,000 coins required!'); return;
+  }
+  if (refs < 7) {
+    showToast(`❌ Refer at least 7 friends! (${refs}/7)`); return;
+  }
+  if (adsWatched < 10) {
+    showToast(`❌ Watch 10 ads first! (${adsWatched}/10)`); return;
+  }
+
+  let address = '';
+  if (method === 'bkash') address = document.getElementById('bkash-number').value.trim();
+  if (method === 'nagad') address = document.getElementById('nagad-number').value.trim();
+  if (method === 'usdt') address = document.getElementById('usdt-address').value.trim();
+
+  if (!address) { showToast('❌ Please enter your ' + method + ' address!'); return; }
+
+  state.withdrawRequests.push({ method, address, coins: state.balance, date: new Date().toISOString() });
+  state.balance = 0;
+  state.withdrawAdsWatched = 0;
+  saveState();
+  updateAllBalances();
+  renderWithdrawAdGrid();
+  showToast('✅ Withdrawal request submitted!');
+}
+
+// ===== PROFILE =====
+function openProfile() {
+  document.getElementById('profile-name').textContent = state.firstName || 'Player';
+  document.getElementById('profile-id').textContent = state.userId;
+  document.getElementById('profile-joined').textContent = state.joinDate || new Date().toLocaleDateString();
+  document.getElementById('profile-total').textContent = (state.totalEarned || 0).toLocaleString() + ' Coins';
+  document.getElementById('profile-spins').textContent = state.totalSpins || 0;
+  document.getElementById('profile-tasks').textContent = state.totalTasks || 0;
+  document.getElementById('profile-modal').style.display = 'flex';
+}
+
+function closeProfile(e) {
+  if (e === null || (e && e.target.id === 'profile-modal')) {
+    document.getElementById('profile-modal').style.display = 'none';
+  }
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2600);
+}
+
+// ===== COUNTDOWN TIMERS =====
+function initCountdownTimers() {
+  setInterval(() => {
+    updateSpinCountdown();
+    updateAutoSpinCountdown();
+    renderDailyStatus();
+  }, 1000);
+}
+
+function updateSpinCountdown() {
+  const el = document.getElementById('spin-countdown');
+  if (!el) return;
+  const left = 21 - state.spin.count;
+  if (left <= 0) {
+    const reset = (state.spin.lastReset || 0) + 4*3600*1000;
+    const diff = reset - Date.now();
+    if (diff > 0) {
+      el.style.display = '';
+      const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+      el.textContent = `⏰ Resets in: ${h}h ${m}m ${s}s`;
+    } else {
+      el.style.display = 'none';
+      checkSpinReset();
+    }
+  } else { el.style.display = 'none'; }
+}
+
+function updateAutoSpinCountdown() {
+  const el = document.getElementById('auto-spin-countdown');
+  if (!el) return;
+  const left = 21 - state.autoSpin.count;
+  if (left <= 0 && !autoSpinRunning) {
+    const reset = (state.autoSpin.lastReset || 0) + 4*3600*1000;
+    const diff = reset - Date.now();
+    if (diff > 0) {
+      el.style.display = '';
+      const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+      el.textContent = `⏰ Resets in: ${h}h ${m}m ${s}s`;
+    } else { el.style.display = 'none'; checkSpinReset(); }
+  } else { el.style.display = 'none'; }
+}
+
+function renderDailyStatus() {
+  const status = document.getElementById('daily-status');
+  const btn = document.getElementById('daily-claim-btn');
+  if (!status || !btn) return;
+  if (!canClaimDaily()) {
+    btn.disabled = true;
+    status.textContent = `Next claim in: ${getNextDailyReset()}`;
+  }
+}
+
+// ===== START =====
+window.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
